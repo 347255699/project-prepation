@@ -2,6 +2,7 @@ package org.mendora.demo;
 
 import com.sun.tools.javac.util.List;
 import org.mendora.demo.vo.structure.TableField;
+import org.mendora.demo.vo.structure.TableFieldType;
 import org.mendora.demo.vo.structure.TableStructure;
 
 import java.sql.SQLSyntaxErrorException;
@@ -25,8 +26,13 @@ public class CreateTableStatementParser {
                 "CREATE",
                 "TABLE",
                 "'.+'|^\\d+(?=[a-zA-Z_$]+)[a-zA-Z_$0-9]*|^[a-zA-Z_$]+[a-zA-Z_$0-9]*",
-                "([a-zA-Z_$0-9]*)\\s?\\(\\s?([a-zA-Z_$0-9]*)",
-                ""
+                "([A-Z_$0-9]*)\\s?\\(\\s?([A-Z_$0-9]*)",
+                TableFieldType.regexAll(),
+                "ID\\s+INT\\s+NOT\\s+NULL\\s+AUTO_INCREMENT",
+                "COMMENT\\s*'.*'",
+                "PRIMARY\\s+KEY(ID)",
+                "UNIQUE\\s+KEY\\s(.*)\\((.*)\\s,\\s(.*)\\s\\)",
+                "^\\)ENGINE=INNODB\\sDEFAULT\\sCHARSET=UTF8MB4\\s*;\\s"
         };
     }
 
@@ -71,5 +77,11 @@ public class CreateTableStatementParser {
         for (String token : line.split("\\s")) {
             parseToken(token);
         }
+    }
+
+    public static void main(String[] args) {
+        String data = "a123";
+        Matcher matcher = Pattern.compile("^\\d+(?=\\D+).*|^\\D+.*").matcher(data);
+        System.out.println(matcher.matches());
     }
 }

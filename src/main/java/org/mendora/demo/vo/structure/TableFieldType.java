@@ -31,7 +31,7 @@ public enum TableFieldType {
         return Pattern.compile(this.regex).matcher(str).matches();
     }
 
-    public static boolean matchesAll(String str) {
+    public static String regexAll(){
         final StringBuilder regexBuilder = new StringBuilder();
         for (int i = 0; i < values().length; i++) {
             if (i == values().length - 1) {
@@ -40,8 +40,12 @@ public enum TableFieldType {
                 regexBuilder.append(values()[i].regex).append("|");
             }
         }
-        final String finalRegex = regexBuilder.toString();
-        return Pattern.compile(finalRegex).matcher(str).matches();
+        return regexBuilder.toString();
+    }
+
+    public static boolean matchesAll(String str) {
+
+        return Pattern.compile(regexAll()).matcher(str).matches();
     }
 
     public static void main(String[] args) {
